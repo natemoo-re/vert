@@ -148,7 +148,7 @@ func assignToMap(m reflect.Value, jv js.Value) (reflect.Value, error) {
 	keys := object.Call("keys", jv)
 	n := keys.Length()
 	if m.IsNil() {
-		m = reflect.MakeMapWithSize(t, n)
+		m = reflect.MakeMap(t)
 	}
 	kt := t.Key()
 	vt := t.Elem()
