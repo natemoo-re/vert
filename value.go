@@ -47,7 +47,7 @@ func valueOf(v reflect.Value) js.Value {
 	case reflect.Struct:
 		return valueOfStruct(v)
 	default:
-		return valueOfPointerOrInterface(v)
+		return js.ValueOf(v.Interface())
 	}
 }
 
