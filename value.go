@@ -47,7 +47,7 @@ func valueOf(v reflect.Value) js.Value {
 	case reflect.Struct:
 		return valueOfStruct(v)
 	default:
-		return null
+		return js.ValueOf(v.Elem())
 	}
 }
 
