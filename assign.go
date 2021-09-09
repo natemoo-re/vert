@@ -7,13 +7,15 @@ import (
 	"fmt"
 	"reflect"
 	"syscall/js"
+
+	"github.com/norunners/vert"
 )
 
 var zero = reflect.ValueOf(nil)
 
 // AssignTo assigns a JS value to a Go pointer.
 // Returns an error on invalid assignments.
-func (v Value) AssignTo(i interface{}) error {
+func (v vert.Value) AssignTo(i interface{}) error {
 	rv := reflect.ValueOf(i)
 	if k := rv.Kind(); k != reflect.Ptr || rv.IsNil() {
 		return &InvalidAssignmentError{Kind: k}
@@ -127,7 +129,7 @@ func assignToStruct(s reflect.Value, val js.Value) (reflect.Value, error) {
 	n := s.NumField()
 	for i := 0; i < n; i++ {
 		if f := s.Field(i); f.CanInterface() {
-			k := nameOf(t.Field(i))
+			k := vert.nameOf(t.Field(i))
 			jf := val.Get(k)
 			v, err := assignTo(f, jf)
 			if err != nil {
@@ -146,7 +148,7 @@ func assignToStruct(s reflect.Value, val js.Value) (reflect.Value, error) {
 // Map keys must be of type string.
 func assignToMap(m reflect.Value, jv js.Value) (reflect.Value, error) {
 	t := m.Type()
-	keys := object.Call("keys", jv)
+	keys := vert.object.Call("keys", jv)
 	n := keys.Length()
 	if m.IsNil() {
 		m = reflect.MakeMapWithSize(t, n)
